@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Try for EndScanner</title>
+    <style type="text/css" media="all">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            font-size: 62.5%;
+        }
+        body {
+            font-size: 1.6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background: rgba(0, 0, 123, 0.425);
+        }
+        .check-code {
+            margin-top: 5rem;
+            text-align: center;
+        }
+        #code {
+            height: 3rem;
+            padding: 0 2rem;
+            border-radius: 3rem;
+            border: 3px solid rgba(90, 133, 255, 0.5);
+        }
+        .botton-check {
+            font-size: 1.8rem;
+            height: 3.5rem;
+            padding: 0 2rem;
+            border-radius: 3.5rem;
+            background: rgba(0, 255, 132, 0.8);
+            font-weight: 1000;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0.25rem 0.25rem 1.3rem rgba(0, 0, 0, 0.8);
+        }
+        #notice {
+            width: 40%;
+            height: 5rem;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid rgba(0, 255, 0, 0.5);
+        }
+        .error {
+            width: 80%;
+            height: 20rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        #error-name, #error-time {
+            width: 40%;
+            height: 20rem;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            border: 3px solid rgba(255, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="check-code">
+        <input type="text" id="code" placeholder="Nhập code của bạn..."/>
+        <br /><br />
+        <button class="botton-check" onclick="check()">CHECK</button>
+    </div>
+    <br /><br />
+    <div id="notice"></div>
+    <br/><br /><br />
+    <div class="error">
+        <div id="error-name"></div>
+        <div id="error-time"></div>
+    </div>
+    
+    
+    <script>
+        function check() {
+            var code = document.getElementById('code').value;
+            var go_out = code.indexOf("goout");
+            var come_in = code.indexOf("comein");
+            
+            // Lấy giờ
+            var hour = new Date().getHours();
+            var min = new Date().getMinutes();
+            var sec = new Date().getSeconds();
+            
+            // Đặt giờ
+            var setHour = 16;
+            var setMin = 14;
+            var setSec = 0;
+            
+            var timeMax = setHour*60*60 + setMin*60 + setSec;
+            var timeNow = hour*60*60 + min*60 + sec;
+            
+            var vaomuon = (hour - setHour) + " giờ " + (min - setMin) + " phút " + (sec - setSec) + " giây!";
+            
+            var arrayName = new Array("lothanhhuong", "trannguyetanh", "lothithuhoai", "lothimay", "lothimai", "lothichinh", "longochung", "lobinhan", "lophuonguyen", "enderuyen");
+            
+            for (let i = 0; i < 11; i++) {
+                var code = document.getElementById('code').value;
+                var arrayName = new Array("lothanhhuong", "trannguyetanh", "lothithuhoai", "lothimay", "lothimai", "lothichinh", "longochung", "lobinhan", "lophuonguyen", "enderuyen");
+                if (code.indexOf(arrayName[i]) > -1) {
+                    
+                    document.getElementById("notice").innerHTML = "Đúng";
+                    
+                    /*
+                    if (timeNow <= timeMax) {
+                        // Nếu đúng giờ
+                        if (go_out > -1) {
+                            document.getElementById("notice").innerHTML = "Chúc bạn ra ngoài vui vẻ!";
+                        } else if (come_in > -1) {
+                            document.getElementById("notice").innerHTML = "Hãy vào trường nghỉ ngơi!";
+                        }
+                    } else {
+                
+                        // Nếu quá giờ
+                         if (code == "comein-lothanhhuong") {
+                                document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Thu Hoài<br />";
+                        } else if (code == "comein-lothithuhoai") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Thu Hoài<br />";
+                        } else if (code == "comein-trannguyetanh") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Trần Nguyệt Ánh<br />";
+                        } else if (code == "comein-lothimay") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Mây<br />";
+                        } else if (code == "comein-lothimai") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Mai<br />";
+                        } else if (code == "comein-lothichinh") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Chỉnh<br />";
+                        } else if (code == "comein-longochung") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Ngọc Hưng<br />";
+                        } else if (code == "comein-lobinhan") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Bình An<br />";
+                        } else if (code == "comein-lophuonguyen") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Phương Uyên<br />";
+                        } else if (code == "comein-enderuyen") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Ender Uyên<br />";
+                        }
+                
+                        if (go_out > -1) {
+                            document.getElementById("notice").innerHTML = "Hết thời gian ra ngoài";
+                            document.getElementById('notice').style.borderColor='#f00';
+                        } else if (come_in > -1) {
+                            document.getElementById("notice").innerHTML = "Bạn đã vào muộn: " + vaomuon;
+                            document.getElementById('notice').style.borderColor='#f00';
+                            document.getElementById("error-time").innerHTML = document.getElementById("error-time").innerHTML + hour + ":" + min + ":" + sec + " - " + vaomuon + "<br/ >";
+                        }
+                
+                    }
+                    */
+                } else {
+                    document.getElementById("notice").innerHTML = "Sai" ;
+                }
+                break;
+            }
+        }
+    </script>
+</body>
+
+</html>
