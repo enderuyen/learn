@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Check name in array from input</title>
+    <style type="text/css" media="all">
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 16px;
+        }
+        input {
+            width: 300px;
+            border-radius: 500px;
+            margin: 50px 0;
+            padding: 10px 20px;
+        }
+        #result, #result-1 {
+            width: 300px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" id="incheck" />
+    <button onclick="check()">Click</button>
+    <div id="result-1"></div>
+    <div id="result"></div>
+    <script type="text/javascript" charset="utf-8">
+        function check() {
+            var code = document.getElementById('incheck').value;
+            document.getElementById("result-1").innerHTML = document.getElementById('incheck').value;
+            var arrayName = Array("abc", "def", "ikl", "mno", "pqr", "xyz");
+            for (var i = 0; i < 6; i++) {
+                
+                document.getElementById('result').innerHTML = document.getElementById('result').innerHTML 
+                + arrayName.indexOf(code);
+            }
+        }
+    </script>
+</body>
+
+</html>

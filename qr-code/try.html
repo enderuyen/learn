@@ -95,8 +95,8 @@
             var sec = new Date().getSeconds();
             
             // Đặt giờ
-            var setHour = 16;
-            var setMin = 14;
+            var setHour = 20;
+            var setMin = 50;
             var setSec = 0;
             
             var timeMax = setHour*60*60 + setMin*60 + setSec;
@@ -104,16 +104,18 @@
             
             var vaomuon = (hour - setHour) + " giờ " + (min - setMin) + " phút " + (sec - setSec) + " giây!";
             
-            var arrayName = new Array("lothanhhuong", "trannguyetanh", "lothithuhoai", "lothimay", "lothimai", "lothichinh", "longochung", "lobinhan", "lophuonguyen", "enderuyen");
+            var arrayName = Array("lothanhhuong", "trannguyetanh", "lothithuhoai", "lothimay", "lothimai", "lothichinh", "longochung", "lobinhan", "lophuonguyen", "enderuyen");
+            
             
             for (let i = 0; i < 11; i++) {
-                var code = document.getElementById('code').value;
-                var arrayName = new Array("lothanhhuong", "trannguyetanh", "lothithuhoai", "lothimay", "lothimai", "lothichinh", "longochung", "lobinhan", "lophuonguyen", "enderuyen");
-                if (code.indexOf(arrayName[i]) > -1) {
-                    
-                    document.getElementById("notice").innerHTML = "Đúng";
-                    
-                    /*
+                
+                if (code.indexOf("goout-") > -1) {
+                    var codecut = code.slice(6);
+                } else if (code.indexOf("comein-") > -1) {
+                    var codecut = code.slice(7);
+                }
+                
+                if (arrayName.indexOf(codecut) > -1) {
                     if (timeNow <= timeMax) {
                         // Nếu đúng giờ
                         if (go_out > -1) {
@@ -124,8 +126,8 @@
                     } else {
                 
                         // Nếu quá giờ
-                         if (code == "comein-lothanhhuong") {
-                                document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Thu Hoài<br />";
+                               if (code == "comein-lothanhhuong") {
+                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Thu Hoài<br />";
                         } else if (code == "comein-lothithuhoai") {
                             document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Thu Hoài<br />";
                         } else if (code == "comein-trannguyetanh") {
@@ -144,6 +146,8 @@
                             document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Phương Uyên<br />";
                         } else if (code == "comein-enderuyen") {
                             document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Ender Uyên<br />";
+                        } else {
+                            document.getElementById("notice").innerHTML = "Hãy quét lại!";
                         }
                 
                         if (go_out > -1) {
@@ -154,13 +158,11 @@
                             document.getElementById('notice').style.borderColor='#f00';
                             document.getElementById("error-time").innerHTML = document.getElementById("error-time").innerHTML + hour + ":" + min + ":" + sec + " - " + vaomuon + "<br/ >";
                         }
-                
+                        break;
                     }
-                    */
                 } else {
-                    document.getElementById("notice").innerHTML = "Sai" ;
+                    document.getElementById("notice").innerHTML = "Tên của bạn không có trong hệ thống!" ;
                 }
-                break;
             }
         }
     </script>
