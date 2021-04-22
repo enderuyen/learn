@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Try for EndScanner</title>
@@ -14,15 +15,20 @@
             font-size: 62.5%;
         }
         body {
+            font-family: "Quicksand", sans-serif;
             font-size: 1.6rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background: rgba(0, 0, 123, 0.425);
         }
         .check-code {
-            margin-top: 5rem;
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            margin-top: 1rem;
             text-align: center;
         }
         #code {
@@ -41,9 +47,10 @@
             text-align: center;
             color: #fff;
             text-shadow: 0.25rem 0.25rem 1.3rem rgba(0, 0, 0, 0.8);
+            margin-left: -5rem;
         }
         #notice {
-            width: 40%;
+            width: 50%;
             height: 5rem;
             background: #fff;
             display: flex;
@@ -51,19 +58,39 @@
             align-items: center;
             border: 3px solid rgba(0, 255, 0, 0.5);
         }
-        .error {
-            width: 80%;
+        .validly, .error {
+            width: 100%;
             height: 20rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-evenly;
         }
-        #error-name, #error-time {
-            width: 40%;
+        .validly__item, .error__item {
+            width: 30%;
             height: 20rem;
-            background: #fff;
+            background: rgba(255, 255, 240, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid rgba(255, 0, 0, 0.5);
+        }
+        .validly__item {
+            border: 3px solid rgba(0, 255, 0, 0.5);
+        }
+        .validly__item--title, .error__item--title {
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 3rem;
             display: flex;
             justify-content: center;
-            border: 3px solid rgba(255, 0, 0, 0.5);
+            align-items: center;
+            text-transform: uppercase;
+            color: #fff;
+            font-weight: 600;
+        }
+        .validly__item--add {
+            text-align: center;
+            min-width: 20vw;
+            width: 100%;
         }
     </style>
 </head>
@@ -73,41 +100,120 @@
         <input type="text" id="code" placeholder="Nhập code của bạn..."/>
         <br /><br />
         <button class="botton-check" onclick="check()">CHECK</button>
+        <div id="notice"></div>
     </div>
-    <br /><br />
-    <div id="notice"></div>
-    <br/><br /><br />
-    <div class="error">
-        <div id="error-name"></div>
-        <div id="error-time"></div>
-    </div>
+    <br />
     
+    <!-- Hợp lệ -->
+    <div class="validly">
+        <div class="validly__item validly__item-1">
+            <p class="validly__item--title">Họ và tên</p>
+            <div id="validly__name"></div>
+        </div>
+        <div class="validly__item validly__item-2">
+            <p class="validly__item--title">Thời gian ra</p>
+            <div id="validly__time-goout"></div>
+        </div>
+        <div class="validly__item validly__item-3">
+            <p class="validly__item--title">Thời gian vào</p>
+            <div id="validly__time-comein"></div>
+        </div>
+        <div class="validly__item validly__item-4">
+            <p class="validly__item--title">Khoảng thời gian</p>
+            <div id="validly__duration"></div>
+        </div>
+    </div>
+    <br />
+    
+    <!-- Lỗi -->
+    <div class="error">
+        <div class="error__item error__item-1">
+            <p class="error__item--title">Họ và Tên</p>
+            <div id="error__name"></div>
+        </div>
+        <div class="error__item error__item-3">
+            <p class="error__item--title">Thời gian muộn</p>
+            <div id="error__time"></div>
+        </div>
+        <div class="error__item error__item-2">
+            <p class="error__item--title">Thời gian ra</p>
+            <div id="error__time-goout"></div>
+        </div>
+        <div class="error__item error__item-2">
+            <p class="error__item--title">Thời gian vào</p>
+            <div id="error__time-comein"></div>
+        </div>
+    </div>
     
     <script>
+    
         function check() {
-            var code = document.getElementById('code').value;
-            var go_out = code.indexOf("goout");
+            var code    = document.getElementById("code").value;
+            var go_out  = code.indexOf("goout");
             var come_in = code.indexOf("comein");
             
             // Lấy giờ
-            var hour = new Date().getHours();
-            var min = new Date().getMinutes();
-            var sec = new Date().getSeconds();
+            var hour    = new Date().getHours();
+            var min     = new Date().getMinutes();
+            var sec     = new Date().getSeconds();
+            var time    = hour + ":" + min + ":" + sec;
             
-            // Đặt giờ
-            var setHour = 20;
-            var setMin = 50;
-            var setSec = 0;
+            // Đặt giờ quy định
+            var setHour = 22;
+            var setMin  = 30;
+            var setSec  = 0;
             
-            var timeMax = setHour*60*60 + setMin*60 + setSec;
-            var timeNow = hour*60*60 + min*60 + sec;
+            // Thời gian tính bằng giây
+            var timeMax = setHour*3600 + setMin*60 + setSec;
+            var timeNow = hour*3600 + min*60 + sec;
             
-            var vaomuon = (hour - setHour) + " giờ " + (min - setMin) + " phút " + (sec - setSec) + " giây!";
+            // Tính thời gian vào muộn
             
-            var arrayName = Array("lothanhhuong", "trannguyetanh", "lothithuhoai", "lothimay", "lothimai", "lothichinh", "longochung", "lobinhan", "lophuonguyen", "enderuyen");
+                var late = timeNow - timeMax;
+                if (late > 0) {
+                    var lateHour = (late - late%3600) / 3600;
+                    var lateMin = ((late - lateHour*3600) - ((late - lateHour*3600) % 60)) / 60;
+                    var lateSec = late - (lateHour*3600 + lateMin*60);
+                    if (lateHour < 10) {
+                        var lateHour = "0" + lateHour;
+                    } else {
+                        var lateHour = lateHour;
+                    }
+                    if (lateMin < 10) {
+                        var lateMin = "0" + lateMin;
+                    } else {
+                        var lateMin = lateMin;
+                    }
+                    if (lateSec < 10) {
+                        var lateSec = "0" + lateSec;
+                    } else {
+                        var lateSec = lateSec;
+                    }
+                    if (lateHour < 1) {
+                        if (lateMin < 1) {
+                            var lateTime = lateSec + " ''";
+                        } else {
+                            var lateTime = lateMin + "'" + lateSec + "''";
+                        }
+                    } else {
+                        var lateTime = lateHour + "h" + lateMin + "'" + lateSec + "''";
+                    }
+                }
             
+            var arrayName = Array(
+                "lothanhhuong",
+                "trannguyetanh",
+                "lothithuhoai",
+                "lothimay",
+                "lothimai",
+                "lothichinh",
+                "longochung",
+                "lobinhan",
+                "lophuonguyen",
+                "enderuyen"
+                );
             
-            for (let i = 0; i < 11; i++) {
+            for (let i = 0; i < arrayName.length; i++) {
                 
                 if (code.indexOf("goout-") > -1) {
                     var codecut = code.slice(6);
@@ -120,43 +226,132 @@
                         // Nếu đúng giờ
                         if (go_out > -1) {
                             document.getElementById("notice").innerHTML = "Chúc bạn ra ngoài vui vẻ!";
+                            document.getElementById("validly__time-goout").innerHTML = document.getElementById("validly__time-goout").innerHTML + time + "<br />";
+                            switch (code) {
+                                case "goout-lothanhhuong": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thanh Hương<br />";
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lothanhhuong"></div>'; break;
+                                }
+                                case "goout-lothithuhoai": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thị Thu Hoài<br />";
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lothithuhoai"></div>';break;
+                                }
+                                case "goout-trannguyetanh": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Trần Nguyệt Ánh<br />"; break;
+                                }
+                                case "goout-lothimay": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thị Mây<br />"; break;
+                                }
+                                case "goout-lothimai": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thị Mai<br />"; break;
+                                }
+                                case "goout-lothichinh": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thị Chỉnh<br />"; break;
+                                }
+                                case "goout-longochung": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Ngọc Hưng<br />"; break;
+                                }
+                                case "goout-lobinhan": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Bình An<br />"; break;
+                                }
+                                case "goout-lophuonguyen": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Phương Uyên<br />"; break;
+                                }
+                                case "goout-enderuyen": {
+                                    document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Ender Uyên<br />"; break;
+                                }
+                                default: {
+                                    document.getElementById("notice").innerHTML = "Hãy quét lại!"; break;
+                                }
+                            } break;
+                            
                         } else if (come_in > -1) {
+                            
                             document.getElementById("notice").innerHTML = "Hãy vào trường nghỉ ngơi!";
+                            switch (code) {
+                                case "comein-lothanhhuong": {
+                                    document.getElementById("time-comein__lothanhhuong").innerHTML = time; break;
+                                }
+                                case "comein-lothithuhoai": {
+                                    document.getElementById("time-comein__lothithuhoai").innerHTML = time; break;
+                                }
+                                case "comein-trannguyetanh": {
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById    ("validly__time-comein").innerHTML + time + "<br />"; break;
+                                }
+                                case "comein-lothimay": {
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById    ("validly__time-comein").innerHTML + time + "<br />"; break;
+                                }
+                                case "comein-lothimai": {
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById    ("validly__time-comein").innerHTML + time + "<br />"; break;
+                                }
+                                case "comein-lothichinh": {
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById    ("validly__time-comein").innerHTML + time + "<br />"; break;
+                                }
+                                case "comein-longochung": {
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById    ("validly__time-comein").innerHTML + time + "<br />"; break;
+                                }
+                                case "comein-lobinhan": {
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById    ("validly__time-comein").innerHTML + time + "<br />"; break;
+                                }
+                                case "comein-lophuonguyen": {
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById    ("validly__time-comein").innerHTML + time + "<br />"; break;
+                                }
+                                case "comein-enderuyen": {
+                                    document.getElementById("validly__time-comein").innerHTML = document.getElementById    ("validly__time-comein").innerHTML + time + "<br />"; break;
+                                }
+                                default: {
+                                    document.getElementById("notice").innerHTML = "Hãy quét lại!"; break;
+                                }
+                            }
                         }
+                        
                     } else {
                 
                         // Nếu quá giờ
-                               if (code == "comein-lothanhhuong") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Thu Hoài<br />";
-                        } else if (code == "comein-lothithuhoai") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Thu Hoài<br />";
-                        } else if (code == "comein-trannguyetanh") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Trần Nguyệt Ánh<br />";
-                        } else if (code == "comein-lothimay") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Mây<br />";
-                        } else if (code == "comein-lothimai") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Mai<br />";
-                        } else if (code == "comein-lothichinh") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Thị Chỉnh<br />";
-                        } else if (code == "comein-longochung") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Ngọc Hưng<br />";
-                        } else if (code == "comein-lobinhan") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Bình An<br />";
-                        } else if (code == "comein-lophuonguyen") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Lò Phương Uyên<br />";
-                        } else if (code == "comein-enderuyen") {
-                            document.getElementById("error-name").innerHTML = document.getElementById("error-name").innerHTML + "Ender Uyên<br />";
-                        } else {
-                            document.getElementById("notice").innerHTML = "Hãy quét lại!";
+                        switch (code) {
+                            case "comein-lothanhhuong": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Lò Thanh Hương<br />"; break;
+                            }
+                            case "comein-lothithuhoai": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Lò Thị Thu Hoài<br />"; break;
+                            }
+                            case "comein-trannguyetanh": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Trần Nguyệt Ánh<br />"; break;
+                            }
+                            case "comein-lothimay": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Lò Thị Mây<br />"; break;
+                            }
+                            case "comein-lothimai": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Lò Thị Mai<br />"; break;
+                            }
+                            case "comein-lothichinh": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Lò Thị Chỉnh<br />"; break;
+                            }
+                            case "comein-longochung": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Lò Ngọc Hưng<br />"; break;
+                            }
+                            case "comein-lobinhan": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Lò Bình An<br />"; break;
+                            }
+                            case "comein-lophuonguyen": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Lò Phương Uyên<br />"; break;
+                            }
+                            case "comein-enderuyen": {
+                                document.getElementById("error__name").innerHTML = document.getElementById("error__name").innerHTML + "Ender Uyên<br />"; break;
+                            }
+                            default: {
+                                document.getElementById("notice").innerHTML = "Hãy quét lại!"; break;
+                            }
                         }
-                
+                        
                         if (go_out > -1) {
                             document.getElementById("notice").innerHTML = "Hết thời gian ra ngoài";
                             document.getElementById('notice').style.borderColor='#f00';
                         } else if (come_in > -1) {
-                            document.getElementById("notice").innerHTML = "Bạn đã vào muộn: " + vaomuon;
+                            document.getElementById("notice").innerHTML = "Bạn đã vào muộn!";
                             document.getElementById('notice').style.borderColor='#f00';
-                            document.getElementById("error-time").innerHTML = document.getElementById("error-time").innerHTML + hour + ":" + min + ":" + sec + " - " + vaomuon + "<br/ >";
+                            document.getElementById("error__time-comein").innerHTML = document.getElementById("error__time-comein").innerHTML + time + "<br />";
+                            document.getElementById("error__time").innerHTML = document.getElementById("error__time").innerHTML + lateTime + "<br />";
                         }
                         break;
                     }

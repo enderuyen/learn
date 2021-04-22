@@ -18,13 +18,31 @@
             margin: 50px 0;
             padding: 10px 20px;
         }
-        #result, #result-1 {
+        #result-1, #result-2, #notice {
             width: 300px;
             height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
             border: 2px solid #000;
+        }
+        #notice {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+          background:greenyellow;
+          width: 100%;
+          height: 50rem;
+        }
+        .div {
+            width: 50%;
+            height: 0.5rem;
+            background-clip: content-box;
+            padding-bottom: 0.3rem;
+            background: #e8f;
+        }
+        .div-1, .div-2, .div-3, .div-4, .div-5 {
+            
         }
     </style>
 </head>
@@ -33,16 +51,18 @@
     <input type="text" id="incheck" />
     <button onclick="check()">Click</button>
     <div id="result-1"></div>
-    <div id="result"></div>
+    <div id="result-2"></div>
+    <div id="notice"></div>
     <script type="text/javascript" charset="utf-8">
         function check() {
+            
             var code = document.getElementById('incheck').value;
-            document.getElementById("result-1").innerHTML = document.getElementById('incheck').value;
+            document.getElementById("result-1").innerHTML = document.getElementById("result-1").innerHTML + document.getElementById('incheck').value + " ";
             var arrayName = Array("abc", "def", "ikl", "mno", "pqr", "xyz");
-            for (var i = 0; i < 6; i++) {
-                
-                document.getElementById('result').innerHTML = document.getElementById('result').innerHTML 
-                + arrayName.indexOf(code);
+            for (let i=0; i<arrayName.length; i++) {
+                if (code == arrayName[i]) {
+                    document.getElementById("notice").innerHTML = document.getElementById("notice").innerHTML + '<div class="div div-"></div' + arrayName.indexOf(code);
+                }
             }
         }
     </script>
