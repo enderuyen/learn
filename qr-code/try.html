@@ -102,7 +102,7 @@
             min-width: 20vw;
             width: 100%;
         }
-        #total, #totalCode {
+        #total-goout, #total-comein, #totalCode {
             display: none;
         }
         .fa-signature {
@@ -190,7 +190,9 @@
     </div>
     
     <br />
-    <div id="total"></div>
+    <div id="total-goout"></div>
+    <br />
+    <div id="total-comein"></div>
     <br />
     <div id="totalCode"></div>
     <script>
@@ -200,16 +202,39 @@
             var go_out  = code.indexOf("goout");
             var come_in = code.indexOf("comein");
             
+            if (code.indexOf("goout-") > -1) {
+                var codecut = code.slice(6);
+            } else if (code.indexOf("comein-") > -1) {
+                var codecut = code.slice(7);
+            }
+            var codeAdd_goout = "goout-" + codecut;
+            var codeAdd_comein = "comein-" + codecut;
+                
             // Lấy giờ
-            var hour    = new Date().getHours();
-            var min     = new Date().getMinutes();
-            var sec     = new Date().getSeconds();
-            var time    = hour + ":" + min + ":" + sec;
+            var hour = new Date().getHours();
+            var min = new Date().getMinutes();
+            var sec = new Date().getSeconds();
+            if (hour < 10) {
+                var printHour = "0" + hour;
+            } else {
+                var printHour = hour;
+            }
+            if (min < 10) {
+                var printMin = "0" + min;
+            } else {
+                var printMin = min;
+            }
+            if (sec < 10) {
+                var printSec = "0" + sec;
+            } else {
+                var printSec = sec;
+            }
+            var time    = printHour + ":" + printMin + ":" + printSec;
             
             // Đặt giờ quy định
-            var setHour = 23;
-            var setMin  = 30;
-            var setSec  = 0;
+            var setHour = 22;
+            var setMin = 00;
+            var setSec = 0;
             
             // Thời gian tính bằng giây
             var timeMax = setHour*3600 + setMin*60 + setSec;
@@ -222,21 +247,25 @@
                     var lateHour = (late - late%3600) / 3600;
                     var lateMin = ((late - lateHour*3600) - ((late - lateHour*3600) % 60)) / 60;
                     var lateSec = late - (lateHour*3600 + lateMin*60);
+                    
                     if (lateHour < 10) {
                         var lateHour = "0" + lateHour;
                     } else {
                         var lateHour = lateHour;
                     }
+                    
                     if (lateMin < 10) {
                         var lateMin = "0" + lateMin;
                     } else {
                         var lateMin = lateMin;
                     }
+                    
                     if (lateSec < 10) {
                         var lateSec = "0" + lateSec;
                     } else {
                         var lateSec = lateSec;
                     }
+                    
                     if (lateHour < 1) {
                         if (lateMin < 1) {
                             var lateTime = lateSec + " ''";
@@ -247,10 +276,7 @@
                         var lateTime = lateHour + "h" + lateMin + "'" + lateSec + "''";
                     }
                 }
-            
-            document.getElementById('total').innerHTML = document.getElementById('total').innerHTML + code;
-            var totalCodegoout = document.getElementById('total').innerHTML;
-            
+            // Danh sach ten
             var arrayName = Array(
                 "lothanhhuong",
                 "trannguyetanh",
@@ -266,114 +292,113 @@
             
             for (let i = 0; i < arrayName.length; i++) {
                 
-                if (code.indexOf("goout-") > -1) {
-                    var codecut = code.slice(6);
-                } else if (code.indexOf("comein-") > -1) {
-                    var codecut = code.slice(7);
-                }
-                var codeAdd = "goout-" + codecut;
-                
+                // có tên tên trong danh sách
                 if (arrayName.indexOf(codecut) > -1) {
+                    // Nếu đúng giờ
                     if (timeNow <= timeMax) {
-                        // Nếu đúng giờ
+                        // Ra ngoài
                         if (go_out > -1) {
-                            // Điều kiện để tạo ra chỉ 1 hàng duy nhất ứng với một tên duy nhất
-                            //if (totalCodegoout.includes(code) = true) {
-                                document.getElementById("notice").innerHTML = "Chúc bạn ra ngoài vui vẻ!";
+                            // Ra ngoài thì được cộng mã vào tổng
+                            document.getElementById("total-goout").innerHTML = document.getElementById("total-goout").innerHTML + code;
+                            var totalCodegoout = document.getElementById("total-goout").innerHTML;
+                            var totalCodegoCut = totalCodegoout.slice(totalCodegoout.indexOf(code) + 1);
+                            
+                            if (totalCodegoCut.indexOf(code) < 0) {
+                                document.getElementById("notice").innerHTML = "Ra ngoài vui vẻ!";
                                 document.getElementById("validly__time-goout").innerHTML = document.getElementById("validly__time-goout").innerHTML + time + "<br />";
                                 switch (code) {
                                     case "goout-lothanhhuong": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thanh Hương<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lothanhhuong"><i class="fas fa-signature"></i></div>';
-                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<div class="validly__item--add" id="time-duration__lothanhhuong"><i class="fab fa-canadian-maple-leaf"></i></div>';
-                                        break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--lothanhhuong"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-lothithuhoai": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thị Thu Hoài<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lothithuhoai"><i class="fas fa-signature"></i></div>';
-                                        break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--lothithuhoai"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-trannguyetanh": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Trần Nguyệt Ánh<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__trannguyetanh"><i class="fas fa-signature"></i></div>'; break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--trannguyetanh"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-lothimay": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thị Mây<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lothimay"><i class="fas fa-signature"></i></div>'; break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--lothimay"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-lothimai": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thị Mai<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lothimai"><i class="fas fa-signature"></i></div>'; break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--lothimai"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-lothichinh": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Thị Chỉnh<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lothichinh"><i class="fas fa-signature"></i></div>'; break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--lothichinh"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-longochung": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Ngọc Hưng<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__longochung"><i class="fas fa-signature"></i></div>'; break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--longochung"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-lobinhan": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Bình An<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lobinhan"><i class="fas fa-signature"></i></div>'; break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--lobinhan"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-lophuonguyen": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Lò Phương Uyên<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__lophuonguyen"><i class="fas fa-signature"></i></div>'; break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--lophuonguyen"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                     case "goout-enderuyen": {
                                         document.getElementById("validly__name").innerHTML = document.getElementById("validly__name").innerHTML + "Ender Uyên<br />";
-                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein__enderuyen"><i class="fas fa-signature"></i></div>'; break;
-                                    }
-                                    default: {
-                                        document.getElementById("notice").innerHTML = "Hãy quét lại!"; break;
-                                    }
-                                } break;
-                            //} else {
-                            //    document.getElementById("error__name").innerHTML = "Bạn đã quét rồi!";
-                            //}
-                            
-                        } else if (come_in > -1) {
-                            if (totalCodegoout.indexOf(codeAdd) < 0) {
-                                document.getElementById("notice").innerHTML = "Bạn chưa quét mã RA NGOÀI!"
-                            } else {
-                                document.getElementById("notice").innerHTML = "Hãy vào trường nghỉ ngơi!";
-                                switch (code) {
-                                    case "comein-lothanhhuong": {
-                                        document.getElementById("time-comein__lothanhhuong").innerHTML = time; break;
-                                    }
-                                    case "comein-lothithuhoai": {
-                                        document.getElementById("time-comein__lothithuhoai").innerHTML = time; break;
-                                    }
-                                    case "comein-trannguyetanh": {
-                                        document.getElementById("time-comein__trannguyetanh").innerHTML = time; break;
-                                    }
-                                    case "comein-lothimay": {
-                                        document.getElementById("time-comein__lothimay").innerHTML = time; break;
-                                    }
-                                    case "comein-lothimai": {
-                                        document.getElementById("time-comein__lothimai").innerHTML = time; break;
-                                    }
-                                    case "comein-lothichinh": {
-                                        document.getElementById("time-comein__lothichinh").innerHTML = time; break;
-                                    }
-                                    case "comein-longochung": {
-                                        document.getElementById("time-comein__longochung").innerHTML = time; break;
-                                    }
-                                    case "comein-lobinhan": {
-                                        document.getElementById("time-comein__lobinhan").innerHTML = time; break;
-                                    }
-                                    case "comein-lophuonguyen": {
-                                        document.getElementById("time-comein__lophuonguyen").innerHTML = time; break;
-                                    }
-                                    case "comein-enderuyen": {
-                                        document.getElementById("time-comein__enderuyen").innerHTML = time; break;
-                                    }
-                                    default: {
-                                        document.getElementById("notice").innerHTML = "Vui lòng quét lại!"; break;
+                                        document.getElementById("validly__time-comein").innerHTML = document.getElementById("validly__time-comein").innerHTML + '<div class="validly__item--add" id="time-comein--enderuyen"><i class="fas fa-signature"></i></div>';
+                                        document.getElementById("validly__duration").innerHTML = document.getElementById("validly__duration").innerHTML + '<i class="fab fa-canadian-maple-leaf"></i>'; break;
                                     }
                                 }
+                                break;
+                            } else {
+                                document.getElementById("notice").innerHTML = "Bạn đã quét mã RA NGOÀI rồi";
                             }
+                        // Vào trong  
+                        } else if (come_in > -1) {
+                                document.getElementById("notice").innerHTML = "Bạn đã có chuyến đi vui vẻ";
+                                switch (code) {
+                                    case "comein-lothanhhuong": {
+                                        document.getElementById("time-comein--lothanhhuong").innerHTML = time; break;
+                                    }
+                                    case "comein-lothithuhoai": {
+                                        document.getElementById("time-comein--lothithuhoai").innerHTML = time; break;
+                                    }
+                                    case "comein-trannguyetanh": {
+                                        document.getElementById("time-comein--trannguyetanh").innerHTML = time; break;
+                                    }
+                                    case "comein-lothimay": {
+                                        document.getElementById("time-comein--lothimay").innerHTML = time; break;
+                                    }
+                                    case "comein-lothimai": {
+                                        document.getElementById("time-comein--lothimai").innerHTML = time; break;
+                                    }
+                                    case "comein-lothichinh": {
+                                        document.getElementById("time-comein--lothichinh").innerHTML = time; break;
+                                    }
+                                    case "comein-longochung": {
+                                        document.getElementById("time-comein--longochung").innerHTML = time; break;
+                                    }
+                                    case "comein-lobinhan": {
+                                        document.getElementById("time-comein--lobinhan").innerHTML = time; break;
+                                    }
+                                    case "comein-lophuonguyen": {
+                                        document.getElementById("time-comein--lophuonguyen").innerHTML = time; break;
+                                    }
+                                    case "comein-enderuyen": {
+                                        document.getElementById("time-comein--enderuyen").innerHTML = time; break;
+                                    }
+                                }
+                                break;
+                            
                         }
                         
                     } else {
@@ -417,10 +442,10 @@
                         
                         if (go_out > -1) {
                             document.getElementById("notice").innerHTML = "Hết thời gian ra ngoài";
-                            document.getElementById('notice').style.borderColor='#f00';
+                            document.getElementById("notice").style.borderColor = '#f00';
                         } else if (come_in > -1) {
                             document.getElementById("notice").innerHTML = "Bạn đã vào muộn!";
-                            document.getElementById('notice').style.borderColor='#f00';
+                            document.getElementById("notice").style.borderColor = '#f00';
                             document.getElementById("error__time-comein").innerHTML = document.getElementById("error__time-comein").innerHTML + time + "<br />";
                             document.getElementById("error__time").innerHTML = document.getElementById("error__time").innerHTML + lateTime + "<br />";
                         }
